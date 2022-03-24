@@ -119,13 +119,13 @@ img {
     font-size: 14px;
 }
 #ProductNumber:focus,
-button[type="submit"]:focus{
+button.searchButton:focus{
     box-shadow: 0 0 3px 0 #1183d6;
     border-color: #1183d6;
     outline: none;
     
 }
-button[type="submit"]{
+button.searchButton{
     text-indent: -999px;
     overflow: hidden;
     width: 20%;
@@ -139,7 +139,7 @@ button[type="submit"]{
     background-color: #FFE200;
 }
 
-button[type="submit"]:active {
+button.searchButton:active {
     background-color: #FFE200;
     box-shadow: 0 0 10px #2196f3, 0 0 40px #2196f3, 0 0 80px #2196f3;
 }

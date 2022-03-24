@@ -5,15 +5,15 @@
     </div>
   </div>
   <div class="search-container">
-    <form action="submit" class="search-bar">
-    <input type="text" name="ProductNumber" id="ProductNumber" placeholder="Suche nach Artikelnummer...">
-    <button type="submit"></button>
+    <form class="search-bar">
+    <input type="text" name="ProductNumber" id="ProductNumber" placeholder="Suche nach Artikelnummer..." ref="productNumberInput">
+    <button @click.prevent="getInput()" class="searchButton"></button>
     </form>
   </div>
   
-  <div class="product-container">
+  <div class="product-container" v-if="showProduct">
      <div class="product-image">
-        <img src="https://images.kkeu.de/is/image/BEG/Leitern_und_Ger%C3%BCste/Stehleitern/Stufen-Stehleiter_einseitig_pdplarge-mrd--945299_AFS_00_00_00_9897134.jpg" alt="Produktfoto">    
+        <img v-bind:src="image" alt="Produktfoto">    
     </div>
     <div class="product-information">
       <h3>Produktinformationen:</h3>
@@ -34,7 +34,7 @@
         </tbody>
     </div>
   </div>
-  <div class="substitute-container">
+  <div class="substitute-container" v-if="showProduct">
     <div class="substitute-header">
       <h2>Alternativen</h2>
       <!-- <button id="substitute-arrow"></button> -->
@@ -56,13 +56,27 @@ const ratings = [
     value: 'Aluminium'
   }
 ]
+let showProduct = false;
 export default {
   created(){
-    this.getApiResponse()
+    // this.getApiResponse()
+  },
+  data(){
+    return{
+      productNumberInput:"",
+      ratings,
+      showProduct,
+      deepLink:undefined,
+      product:undefined,
+      image:"",
+    }
   },
 
   methods:{
-    getApiResponse() {
+     async getInput(){
+      this.productNumberInput = this.$refs.productNumberInput.value;
+      console.log(this.productNumberInput)
+      
       const myHeaders = new Headers();
       myHeaders.append("x-requested-by", "<-->666<-->");
 
@@ -71,18 +85,30 @@ export default {
         headers: myHeaders,
         redirect: 'follow',
       };
-
-      fetch("http://mybackend.com:8080/api/shops/www.kaiserkraft.de/product/M6615896?lang=de", requestOptions)
+      
+      const deep = await fetch(`http://mybackend.com:8080/api/shops/www.kaiserkraft.de/search_suggest?query=${this.productNumberInput}&requestId=607f91cc-55e9-43ab-8cc6-bf42287892ef&channelId=kkeu_de_DE`, requestOptions)
         .then(response => response.json())
-        .then(result => console.log(result))
         .catch(error => console.log('error', error));
-        
-    }  
-  },
+      let deepLink = deep.productsSuggestions;
+      deepLink = JSON.stringify(deepLink[0].deeplink).substring(deepLink[0].deeplink.indexOf('/M') +1);
+      const deepLinkLength = deepLink.length;
+      this.deepLink = deepLink.substring(1, deepLinkLength -2)
+      console.log(this.deepLink);
 
-  data() {
-    return {
-    ratings
+      const product = await fetch(`http://mybackend.com:8080/api/shops/www.kaiserkraft.de/product/${this.deepLink}?lang=de`, requestOptions)
+        .then((response) => response.json())
+        .catch((error) => {
+          console.log('error', error);
+          this.showProduct = false;
+          });
+      this.product = product;
+      console.log(this.product);
+      
+      
+      if(this.product != undefined){
+        this.image = this.product.galleryList[0].url;  
+        this.showProduct = true;
+      }
     }
   }
 }
