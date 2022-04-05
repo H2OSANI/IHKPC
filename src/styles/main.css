@@ -39,6 +39,10 @@ h2{
     padding: 2rem;
     background-color: #faf6f6;
 }
+.price {
+    padding: 0;
+    margin: 0;
+}
 
 .search-bar{
     color: #555;
@@ -46,6 +50,8 @@ h2{
     border: 1px solid currentColor;
     border-radius: 2px;
     min-width: 25rem;
+    margin-left: 25rem;
+    margin-right: 25rem;
 }
 
 .product-container {
@@ -57,13 +63,14 @@ h2{
     border: 1px solid grey;
     border-left: none;
     border-right: none;
+    box-shadow: 2px 2px 6px 4px rgba(0, 0, 0, 0.753);
 }
 
 .product-information {
     max-width: 30rem;
     min-width: 22rem;
     background-color: #FFFF;
-    
+
 }
 
 .product-rating {
@@ -73,6 +80,7 @@ h2{
     width: 20rem;
     max-width: 25rem;
     background-color: #FFFF;
+
 }
 
 td {
@@ -148,4 +156,83 @@ button.searchButton:active {
     margin-left: 10rem;
     background: transparent url(/src/assets/Mediamodifier-Design.svg) no-repeat center;
     cursor: pointer;
+}
+#alternative-table{
+    border-collapse: collapse;
+    min-width: 100%;
+    border-top: solid #FFE200;
+    letter-spacing: 1px;
+    font-size: 2rem;
+}
+#alternative-table thead tr{
+    background-color: rgba(0, 0, 0, 0.753);
+    color: #faf6f6;
+    text-align: left;
+    font-weight: bold;
+
+}
+#alternative-table th,
+#alternative-table td {
+    padding: 12px 15px;
+    text-align: center;
+}
+#alternative-table td:not(:first-of-type){
+    width: 150px;
+    height: 150px;
+    justify-content: center;
+}
+.alternative-row{
+    background-color: rgba(0, 0, 0, 0.753);
+    color: #faf6f6;
+    text-align: left;
+    font-weight: bold;
+    width: 5rem;
+}
+.alternative-container{
+    margin: 0;
+    padding: 0;
+}
+.alternative-product{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 85%;
+    transition: 200ms;
+    border-radius: 10px 10px 10px 10px;
+    overflow: hidden;
+}
+.alternative-product:hover{
+    transform: scale(1.05);
+    opacity: 100%;
+    cursor: pointer;
+    box-shadow: 2px 2px 6px 4px #2196f3;
+    border-radius: 10px 10px 10px 10px;
+    overflow: hidden;
+}
+.alternative-product p{
+    margin-top: 2px;
+    font-size: 14px;
+    padding: 5px;
+}
+.alternative-product img{
+    max-height: auto;
+    max-width: auto;
+}
+
+.alternative-button{
+    transform: rotate(180deg);
+    transition: 200ms;
+    cursor: pointer;
+}
+.alternative-button:hover{
+    transform: rotate(360deg);
+}
+.alternative-button-after{
+    transform: rotate(0deg);
+    transition: 200ms;
+    cursor: pointer;
+}
+.alternative-button-after:hover{
+    transform: rotate(180deg);
 }
