@@ -220,12 +220,13 @@ button.searchButton:active {
     max-width: auto;
 }
 
-.alternative-button{
+.alternativebutton{
     transform: rotate(180deg);
+    fill: #FFE200;
     transition: 200ms;
     cursor: pointer;
 }
-.alternative-button:hover{
+.alternativebutton:hover{
     transform: rotate(360deg);
 }
 .alternative-button-after{
@@ -235,4 +236,23 @@ button.searchButton:active {
 }
 .alternative-button-after:hover{
     transform: rotate(180deg);
+}
+.alternativebuttondisabled{
+    pointer-events: none;
+}
+.arrowLoading{
+    fill: red;
+}
+
+.loading{
+    animation: blink 0.5s alternate infinite;
+}
+@keyframes blink {
+    from {
+        fill: transparent;
+    }
+
+    to{
+        fill: red;
+    }
 }

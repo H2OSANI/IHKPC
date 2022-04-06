@@ -57,9 +57,11 @@
       <h2>Alternativen</h2>
     </div>
     <svg
+      class="alternativebutton"
+      :class="{ alternativebuttondisabled: !loadAlternatives }"
       @click="toggleAlternatives()"
       v-if="!showAlternatives"
-      class="alternative-button"
+      v-bind="loadAlternatives"
       xmlns="http://www.w3.org/2000/svg"
       width="80"
       height="80"
@@ -68,12 +70,13 @@
       <a>
         <rect width="100%" height="100%" fill="transparent" />
         <path
+          :class="{ arrowLoading: !loadAlternatives }"
           vector-effect="non-scaling-stroke"
           d="M54.939 38.815c1.294 1.315 1.294 3.447 0 4.74l-12.561 12.56a3.338 3.338 0 0 1-4.74 0l-12.561-12.56c-1.316-1.293-1.316-3.425 0-4.74 1.814-1.7 6.802 2.041 11.292 3.787V25.12c0-1.225.997-2.222 2.222-2.222h3.355c1.225 0 2.222.997 2.222 2.222v17.255c4.24-1.791 8.776-5.102 10.771-3.56z"
           fill="#ffe200"
         />
         <path
-          vector-effect="non-scaling-stroke"
+          :class="{ loading: !loadAlternatives }"
           d="M40 62.724C27.47 62.724 17.276 52.53 17.276 40S27.47 17.276 40 17.276 62.724 27.47 62.724 40 52.53 62.724 40 62.724zm0-44.388c-11.946 0-21.664 9.718-21.664 21.664 0 11.945 9.718 21.664 21.664 21.664 11.945 0 21.664-9.719 21.664-21.664 0-11.946-9.719-21.664-21.664-21.664z"
           fill="#ffe200"
         />
@@ -118,166 +121,56 @@
       <tbody>
         <tr>
           <td class="alternative-row">5</td>
-          <td>
+          <td v-for="alternative5 in five" :key="alternative5.brandedProductName" @click="getInput(alternative5.articleNumber)">
             <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
+              <img v-if="alternative5" v-bind:src="alternative5.galleryList[0].url" alt="Produktfoto" />
+              <img v-else src="" alt="" />
+              <p>{{ alternative5.brandedProductName }}</p>
+              <p>{{ alternative5.price.net.toFixed(2) }} €</p>
             </div>
           </td>
         </tr>
         <tr>
           <td class="alternative-row">4</td>
-          <td>
+           <td v-for="alternative4 in four" :key="alternative4.brandedProductName" @click="getInput(alternative4.articleNumber)">
             <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
+              <img v-if="alternative4" v-bind:src="alternative4.galleryList[0].url" alt="Produktfoto" />
+              <img v-else src="" alt="" />
+              <p>{{ alternative4.brandedProductName }}</p>
+              <p>{{ alternative4.price.net.toFixed(2) }} €</p>
             </div>
           </td>
         </tr>
         <tr>
           <td class="alternative-row">3</td>
-          <td>
+         <td v-for="alternative3 in three" :key="alternative3.brandedProductName" @click="getInput(alternative3.articleNumber)">
             <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
+              <img v-if="alternative3" v-bind:src="alternative3.galleryList[0].url" alt="Produktfoto" />
+              <img v-else src="" alt="" />
+              <p>{{ alternative3.brandedProductName }}</p>
+              <p>{{ alternative3.price.net.toFixed(2) }} €</p>
             </div>
           </td>
         </tr>
         <tr>
           <td class="alternative-row">2</td>
-          <td>
+          <td v-for="alternative2 in two" :key="alternative2.brandedProductName" @click="getInput(alternative2.articleNumber)">
             <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
+              <img v-if="alternative2" v-bind:src="alternative2.galleryList[0].url" alt="Produktfoto" />
+              <img v-else src="" alt="" />
+              <p>{{ alternative2.brandedProductName }}</p>
+              <p>{{ alternative2.price.net.toFixed(2) }} €</p>
             </div>
           </td>
         </tr>
         <tr>
           <td class="alternative-row">1</td>
-          <td>
+          <td v-for="alternative1 in one" :key="alternative1.brandedProductName" @click="getInput(alternative1.articleNumber)">
             <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
-            </div>
-          </td>
-          <td>
-            <div class="alternative-product">
-              <img v-bind:src="image" alt="Produktfoto" />
-              <p>{{ description }}</p>
+              <img v-if="alternative1" v-bind:src="alternative1.galleryList[0].url" alt="Produktfoto" />
+              <img v-else src="" alt="" />
+              <p>{{ alternative1.brandedProductName }}</p>
+              <p>{{ alternative1.price.net.toFixed(2) }} €</p>
             </div>
           </td>
         </tr>
@@ -287,7 +180,6 @@
 </template>
 <script>
 import jsonData from "@/json/data.json";
-let showProduct = false;
 export default {
   created() {},
   data() {
@@ -300,8 +192,7 @@ export default {
           Teilsortiment: "",
         },
       ],
-      showProduct,
-      deepLink: undefined,
+      showProduct: false,
       product: undefined,
       image: "",
       price: null,
@@ -310,15 +201,26 @@ export default {
       showAlternatives: false,
       data: jsonData,
       options: [],
+      matrixNutzen: [1, 2, 3, 4, 5],
+      matrixQuality: ["A", "B", "C", "D", "E"],
+      matrix: [],
+      alternatives: [],
+      five: [],
+      four: [],
+      three: [],
+      two: [],
+      one: [],
+      loadAlternatives: false,
     };
   },
 
   methods: {
-    async getInput() {
-      this.options = [];
+    async getInput(alternative) {
       this.productNumberInput = this.$refs.productNumberInput.value;
       console.log(this.productNumberInput);
-
+      if(alternative){
+        this.productNumberInput = alternative;
+      }
       const myHeaders = new Headers();
       myHeaders.append("x-requested-by", "<-->666<-->");
 
@@ -334,7 +236,13 @@ export default {
       //   .then((response) => response.json())
       //   .catch((error) => console.log("error", error));
       // console.log(test);
-
+      this.showAlternatives = false;
+      this.loadAlternatives = false;
+      this.five.splice(0)
+      this.four.splice(0)
+      this.three.splice(0)
+      this.two.splice(0)
+      this.one.splice(0)
       const data = await fetch(
         //search = ID Search
         //search_suggest = Vorschläge
@@ -378,6 +286,10 @@ export default {
       this.ratings.Nutzen = result.Nutzen;
       this.ratings.Teilsortiment = result.Teilsortiment;
 
+      this.matrix.splice(0);
+      this.options.splice(0);
+      this.alternatives.splice(0);
+
       for (let i = 0; i < this.data.Sheet1.length; i++) {
         let obj = this.data.Sheet1[i];
 
@@ -386,9 +298,72 @@ export default {
         }
       }
       console.log(this.options);
-      console.log(
-        this.options.find((item) => item.Quality === "E" && item.Nutzen == 1)
-      );
+      for (let i = 0; i < this.matrixNutzen.length; i++) {
+        for (let j = 0; j < this.matrixQuality.length; j++) {
+          this.matrix.push(
+            this.options.find(
+              (item) =>
+                item.Nutzen == this.matrixNutzen[i] &&
+                item.Quality == this.matrixQuality[j]
+            )
+          );
+        }
+      }
+      console.log(this.matrix);
+      let promiseList = [];
+      
+      for (let i = 0; i < this.matrix.length; i++) {
+        if (!this.matrix[i]) {
+          promiseList.push(Promise.resolve({brandedProductName: "Keine Treffer", galleryList:[{url: "Empty"}], price: {net: 0}}));
+          //this.alternatives.push();
+        } else {
+          promiseList.push(
+          fetch(
+            `http://mybackend.com:8080/shop/api/shops/www.kaiserkraft.de/product/${this.matrix[i].Master}/?articleNumber=${this.matrix[i].ID}?lang=de`,
+            requestOptions
+          )
+            .then((response) => response.json())
+            .catch((error) => {
+              console.log("error", error);
+            }));
+          //alternativeResult.articleNumber = this.matrix[i].ID;
+          // this.alternatives.push(alternativeResult);
+        }
+      }
+      await Promise.all(promiseList);
+      let responses = await Promise.all(promiseList)
+
+      this.alternatives = responses.map((response, index) => {
+         
+        if (this.matrix[index]){
+            response.articleNumber = this.matrix[index].ID;
+        }
+        return response;
+        })
+      
+      this.loadAlternatives = true;
+      this.alternatives.reverse();
+
+      this.five.push(this.alternatives.splice(0, 5))
+      this.five = this.five[0].reverse();
+      console.log(this.five)
+      
+      this.four.push(this.alternatives.splice(0, 5))
+      this.four = this.four[0].reverse();
+      console.log(this.four)
+      
+      this.three.push(this.alternatives.splice(0, 5))
+      this.three = this.three[0].reverse();
+      console.log(this.three)
+
+      this.two.push(this.alternatives.splice(0, 5))
+      this.two = this.two[0].reverse();
+      console.log(this.two)
+
+      this.one.push(this.alternatives.splice(0, 5))
+      this.one = this.one[0].reverse();
+      console.log(this.one)
+
     },
     toggleAlternatives() {
       this.showAlternatives = !this.showAlternatives;
