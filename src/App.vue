@@ -3,10 +3,15 @@
     <div class="nav-bar">
       <h2>Product Cockpit</h2>
     </div>
+    <div class="countrySelection">
+        <select v-model="countrySelected">
+          <option v-for="c in country" :key="c.Name" v-bind:value="{Name: c.Name, Code: c.Code, Currency: c.Currency}" >{{ c.Name }}</option>
+        </select>
+    </div>
   </div>
   <div class="search-container">
     <div class="price" v-if="showProduct">
-      <h3>Preis: {{ price }} €</h3>
+      <h3>Preis: {{ price }} {{ countrySelected.Currency }}</h3>
     </div>
     <form class="search-bar">
       <input
@@ -56,11 +61,11 @@
     <div class="substitute-header">
       <h2>Alternativen</h2>
     </div>
+    <div>
     <svg
       class="alternativebutton"
-      :class="{ alternativebuttondisabled: !loadAlternatives }"
+      :class="{ alternativebuttondisabled: !loadAlternatives, alternativebuttonafter: showAlternatives}"
       @click="toggleAlternatives()"
-      v-if="!showAlternatives"
       v-bind="loadAlternatives"
       xmlns="http://www.w3.org/2000/svg"
       width="80"
@@ -82,34 +87,13 @@
         />
       </a>
     </svg>
-    <svg
-      @click="toggleAlternatives()"
-      v-if="showAlternatives"
-      class="alternative-button-after"
-      xmlns="http://www.w3.org/2000/svg"
-      width="80"
-      height="80"
-      xml:space="preserve"
-    >
-      <a>
-        <rect width="100%" height="100%" fill="transparent" />
-        <path
-          vector-effect="non-scaling-stroke"
-          d="M54.939 38.815c1.294 1.315 1.294 3.447 0 4.74l-12.561 12.56a3.338 3.338 0 0 1-4.74 0l-12.561-12.56c-1.316-1.293-1.316-3.425 0-4.74 1.814-1.7 6.802 2.041 11.292 3.787V25.12c0-1.225.997-2.222 2.222-2.222h3.355c1.225 0 2.222.997 2.222 2.222v17.255c4.24-1.791 8.776-5.102 10.771-3.56z"
-          fill="#ffe200"
-        />
-        <path
-          vector-effect="non-scaling-stroke"
-          d="M40 62.724C27.47 62.724 17.276 52.53 17.276 40S27.47 17.276 40 17.276 62.724 27.47 62.724 40 52.53 62.724 40 62.724zm0-44.388c-11.946 0-21.664 9.718-21.664 21.664 0 11.945 9.718 21.664 21.664 21.664 11.945 0 21.664-9.719 21.664-21.664 0-11.946-9.719-21.664-21.664-21.664z"
-          fill="#ffe200"
-        />
-      </a>
-    </svg>
+    </div>
   </div>
+  <transition>
   <div class="alternative-container" v-if="showAlternatives">
     <table id="alternative-table">
       <thead>
-        <tr>
+        <tr class="tr">
           <th>&nbsp;</th>
           <th>A</th>
           <th>B</th>
@@ -121,69 +105,247 @@
       <tbody>
         <tr>
           <td class="alternative-row">5</td>
-          <td v-for="alternative5 in five" :key="alternative5.brandedProductName" @click="getInput(alternative5.articleNumber)">
-            <div class="alternative-product">
-              <img v-if="alternative5" v-bind:src="alternative5.galleryList[0].url" alt="Produktfoto" />
-              <img v-else src="" alt="" />
-              <p>{{ alternative5.brandedProductName }}</p>
-              <p>{{ alternative5.price.net.toFixed(2) }} €</p>
+          <td v-for="alternative5 in five" :key="alternative5.brandedProductName" @click="alternative5.galleryList[0].url != null ? getInput(alternative5.articleNumber) : null">
+            <div class="wrapper" :class="{alternativePointer : !alternative5.galleryList[0].url}">
+              <div class="container">
+                <div class="top">
+                   <img v-if="alternative5.galleryList[0].url === null" src="@/assets/no-product.png" alt="no Match">
+                    <img v-else v-bind:src="alternative5.galleryList[0].url">
+                </div>
+                <div class="bottom">
+                  <div class="left">
+                    <div class="details">
+                      <h1>{{ alternative5.brandedProductName }}</h1>
+                    </div>
+                    <div class="buy"><h1>{{ alternative5.price.net.toFixed(2) }} {{ countrySelected.Currency }}</h1></div>
+                  </div>
+                  <div class="right">
+                  </div>
+                </div>
+              </div>
+              <div v-if="alternative5.galleryList[0].url != null" class="inside">
+                <div class="icon"><i class="material-icons-outlined">info</i></div>
+                <div class="contents">
+                  <ul v-for="classification in alternative5.classifications" v-bind:value="classification.id" v-bind:selected="index === 0" :key="classification.id">
+                    <li v-for="feature in classification.features" :key="feature.name">
+                      {{ feature.name }} : {{ feature.featureValues[0].value }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </td>
         </tr>
         <tr>
           <td class="alternative-row">4</td>
-           <td v-for="alternative4 in four" :key="alternative4.brandedProductName" @click="getInput(alternative4.articleNumber)">
-            <div class="alternative-product">
-              <img v-if="alternative4" v-bind:src="alternative4.galleryList[0].url" alt="Produktfoto" />
-              <img v-else src="" alt="" />
-              <p>{{ alternative4.brandedProductName }}</p>
-              <p>{{ alternative4.price.net.toFixed(2) }} €</p>
+           <td v-for="alternative4 in four" :key="alternative4.brandedProductName" @click="alternative4.galleryList[0].url != null ? getInput(alternative4.articleNumber) : null">
+            <div class="wrapper" :class="{alternativePointer : !alternative4.galleryList[0].url}">
+              <div class="container">
+                <div class="top">
+                  <img v-if="alternative4.galleryList[0].url === null" src="@/assets/no-product.png" alt="no Match">
+                  <img v-else v-bind:src="alternative4.galleryList[0].url">
+                </div>
+                <div class="bottom">
+                  <div class="left">
+                    <div class="details">
+                      <h1>{{ alternative4.brandedProductName }}</h1>
+                    </div>
+                    <div class="buy"><h1>{{ alternative4.price.net.toFixed(2) }} {{ countrySelected.Currency }}</h1></div>
+                  </div>
+                  <div class="right">
+                  </div>
+                </div>
+              </div>
+              <div v-if="alternative4.galleryList[0].url != null" class="inside">
+                <div class="icon"><i class="material-icons-outlined">info</i></div>
+                <div class="contents">
+                  <ul v-for="classification in alternative4.classifications" v-bind:value="classification.id" v-bind:selected="index === 0" :key="classification.id">
+                    <li v-for="feature in classification.features" :key="feature.name">
+                      {{ feature.name }} : {{ feature.featureValues[0].value }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </td>
         </tr>
         <tr>
           <td class="alternative-row">3</td>
-         <td v-for="alternative3 in three" :key="alternative3.brandedProductName" @click="getInput(alternative3.articleNumber)">
-            <div class="alternative-product">
-              <img v-if="alternative3" v-bind:src="alternative3.galleryList[0].url" alt="Produktfoto" />
-              <img v-else src="" alt="" />
-              <p>{{ alternative3.brandedProductName }}</p>
-              <p>{{ alternative3.price.net.toFixed(2) }} €</p>
+         <td v-for="alternative3 in three" :key="alternative3.brandedProductName" @click="alternative3.galleryList[0].url != null ? getInput(alternative3.articleNumber) : null">
+            <div class="wrapper" :class="{alternativePointer : !alternative3.galleryList[0].url}">
+              <div class="container">
+                <div class="top">
+                  <img v-if="alternative3.galleryList[0].url === null" src="@/assets/no-product.png" alt="no Match">
+                  <img v-else v-bind:src="alternative3.galleryList[0].url">
+                </div>
+                <div class="bottom">
+                  <div class="left">
+                    <div class="details">
+                      <h1>{{ alternative3.brandedProductName }}</h1>
+                    </div>
+                    <div class="buy"><h1>{{ alternative3.price.net.toFixed(2) }} {{ countrySelected.Currency }}</h1></div>
+                  </div>
+                  <div class="right">
+                  </div>
+                </div>
+              </div>
+              <div v-if="alternative3.galleryList[0].url != null" class="inside">
+                <div class="icon"><i class="material-icons-outlined">info</i></div>
+                <div class="contents">
+                  <ul v-for="classification in alternative3.classifications" v-bind:value="classification.id" v-bind:selected="index === 0" :key="classification.id">
+                    <li v-for="feature in classification.features" :key="feature.name">
+                      {{ feature.name }} : {{ feature.featureValues[0].value }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </td>
         </tr>
         <tr>
           <td class="alternative-row">2</td>
-          <td v-for="alternative2 in two" :key="alternative2.brandedProductName" @click="getInput(alternative2.articleNumber)">
-            <div class="alternative-product">
-              <img v-if="alternative2" v-bind:src="alternative2.galleryList[0].url" alt="Produktfoto" />
-              <img v-else src="" alt="" />
-              <p>{{ alternative2.brandedProductName }}</p>
-              <p>{{ alternative2.price.net.toFixed(2) }} €</p>
+          <td v-for="alternative2 in two" :key="alternative2.brandedProductName" @click="alternative2.galleryList[0].url != null ? getInput(alternative2.articleNumber) : null">
+            <div class="wrapper" :class="{alternativePointer : !alternative2.galleryList[0].url}">
+              <div class="container">
+                <div class="top">
+                  <img v-if="alternative2.galleryList[0].url === null" src="@/assets/no-product.png" alt="no Match">
+                  <img v-else v-bind:src="alternative2.galleryList[0].url">
+                </div>
+                <div class="bottom">
+                  <div class="left">
+                    <div class="details">
+                      <h1>{{ alternative2.brandedProductName }}</h1>
+                    </div>
+                    <div class="buy"><h1>{{ alternative2.price.net.toFixed(2) }} {{ countrySelected.Currency }}</h1></div>
+                  </div>
+                  <div class="right">
+                  </div>
+                </div>
+              </div>
+              <div v-if="alternative2.galleryList[0].url != null" class="inside">
+                <div class="icon"><i class="material-icons-outlined">info</i></div>
+                <div class="contents">
+                  <ul v-for="classification in alternative2.classifications" v-bind:value="classification.id" v-bind:selected="index === 0" :key="classification.id">
+                    <li v-for="feature in classification.features" :key="feature.name">
+                      {{ feature.name }} : {{ feature.featureValues[0].value }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </td>
         </tr>
         <tr>
           <td class="alternative-row">1</td>
-          <td v-for="alternative1 in one" :key="alternative1.brandedProductName" @click="getInput(alternative1.articleNumber)">
-            <div class="alternative-product">
-              <img v-if="alternative1" v-bind:src="alternative1.galleryList[0].url" alt="Produktfoto" />
-              <img v-else src="" alt="" />
-              <p>{{ alternative1.brandedProductName }}</p>
-              <p>{{ alternative1.price.net.toFixed(2) }} €</p>
+          <td v-for="alternative1 in one" :key="alternative1.brandedProductName" @click="alternative1.galleryList[0].url != null ? getInput(alternative1.articleNumber) : null">
+            <div class="wrapper" :class="{alternativePointer : !alternative1.galleryList[0].url}">
+              <div class="container">
+                <div class="top">
+                  <img v-if="alternative1.galleryList[0].url === null" src="@/assets/no-product.png" alt="no Match">
+                  <img v-else v-bind:src="alternative1.galleryList[0].url">
+                </div>
+                <div class="bottom">
+                  <div class="left">
+                    <div class="details">
+                      <h1>{{ alternative1.brandedProductName }}</h1>
+                    </div>
+                    <div class="buy"><h1>{{ alternative1.price.net.toFixed(2) }} {{ countrySelected.Currency }}</h1></div>
+                  </div>
+                  <div class="right">
+                  </div>
+                </div>
+              </div>
+              <div v-if="alternative1.galleryList[0].url != null" class="inside">
+                <div class="icon"><i class="material-icons-outlined">info</i></div>
+                <div class="contents">
+                  <ul v-for="classification in alternative1.classifications" v-bind:value="classification.id" v-bind:selected="index === 0" :key="classification.id">
+                    <li v-for="feature in classification.features" :key="feature.name">
+                      {{ feature.name }} : {{ feature.featureValues[0].value }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+  </transition>
 </template>
 <script>
+const STORAGE_KEY = 'component-storage';
 import jsonData from "@/json/data.json";
 export default {
-  created() {},
   data() {
     return {
+      country: [
+      {
+        Name: 'Deutschland',
+        Code: 'de',
+        Currency: '€'
+      },
+      {
+        Name: 'UK',
+        Code: 'co.uk',
+        Currency: '£'
+      },
+      {
+        Name: 'Schweiz',
+        Code: 'ch',
+        Currency: 'CHF'
+      },
+      {
+        Name: 'Austria',
+        Code: 'at',
+        Currency: '€'
+      },
+      {
+        Name: 'Frankreich',
+        Code: 'fr',
+        Currency: '€'
+      },
+      {
+        Name: 'Spanien',
+        Code: 'es',
+        Currency: '€'
+      },
+       {
+        Name: 'Niederlande',
+        Code: 'nl',
+        Currency: '€'
+      },
+       {
+        Name: 'Belgien',
+        Code: 'be',
+        Currency: '€'
+      },
+       {
+        Name: 'Italien',
+        Code: 'it',
+        Currency: '€'
+      },
+       {
+        Name: 'Tschechien',
+        Code: 'cz',
+        Currency: 'Kč'
+      },
+       {
+        Name: 'Polen',
+        Code: 'pl',
+        Currency: 'zł'
+      },
+       {
+        Name: 'Portugal',
+        Code: 'pt',
+        Currency: '€'
+      },
+      ],
+      countrySelected: {
+        Name: 'Deutschland',
+        Code: 'de',
+        Currency: '€'
+      },
       productNumberInput: "",
       ratings: [
         {
@@ -198,6 +360,7 @@ export default {
       price: null,
       description: "",
       features: [],
+      featuresFive: [],
       showAlternatives: false,
       data: jsonData,
       options: [],
@@ -213,7 +376,11 @@ export default {
       loadAlternatives: false,
     };
   },
-
+  components: {
+  },
+  created(){
+    
+  },
   methods: {
     async getInput(alternative) {
       this.productNumberInput = this.$refs.productNumberInput.value;
@@ -247,7 +414,7 @@ export default {
         //search = ID Search
         //search_suggest = Vorschläge
         //productCockpitSearch = return ID Alternativen
-        `http://mybackend.com:8080/shop/api/shops/www.kaiserkraft.de/search?query=${this.productNumberInput}&productsPerPage=24&page=1&customerId=www.kaiserkraft.de-userpricegroup&sessionId=06a9554d-8224-413d-a2ea-98a5659284eb&channelId=kkeu_de_DE&sort=`,
+        `http://mybackend.com:8080/shop/api/shops/www.kaiserkraft.${this.countrySelected.Code}/search?query=${this.productNumberInput}&productsPerPage=24&page=1&customerId=www.kaiserkraft.${this.countrySelected.Code}-userpricegroup&sessionId=06a9554d-8224-413d-a2ea-98a5659284eb&channelId=kkeu_de_DE&sort=`,
         requestOptions
       )
         .then((response) => response.json())
@@ -258,7 +425,7 @@ export default {
       console.log(productMaster);
       console.log(articleNumber);
       const productDetails = await fetch(
-        `http://mybackend.com:8080/shop/api/shops/www.kaiserkraft.de/product/${productMaster}/?articleNumber=${articleNumber}?lang=de`,
+        `http://mybackend.com:8080/shop/api/shops/www.kaiserkraft.${this.countrySelected.Code}/product/${productMaster}/?articleNumber=${articleNumber}?lang=de`,
         requestOptions
       )
         .then((response) => response.json())
@@ -273,8 +440,7 @@ export default {
         this.image = this.product.galleryList[0].url;
         this.price = this.product.price.net.toFixed(2);
         this.description = this.product.brandedProductName;
-        const classifications = this.product.classifications;
-        this.features = classifications[0].features;
+        this.features = this.product.classifications[0].features;
         console.log(this.features);
         this.showProduct = true;
         this.showAlternatives = false;
@@ -314,12 +480,12 @@ export default {
       
       for (let i = 0; i < this.matrix.length; i++) {
         if (!this.matrix[i]) {
-          promiseList.push(Promise.resolve({brandedProductName: "Keine Treffer", galleryList:[{url: "Empty"}], price: {net: 0}}));
+          promiseList.push(Promise.resolve({brandedProductName: "Keine Treffer", galleryList:[{url: null}], price: {net: 0}}));
           //this.alternatives.push();
         } else {
           promiseList.push(
           fetch(
-            `http://mybackend.com:8080/shop/api/shops/www.kaiserkraft.de/product/${this.matrix[i].Master}/?articleNumber=${this.matrix[i].ID}?lang=de`,
+            `http://mybackend.com:8080/shop/api/shops/www.kaiserkraft.${this.countrySelected.Code}/product/${this.matrix[i].Master}/?articleNumber=${this.matrix[i].ID}?lang=de`,
             requestOptions
           )
             .then((response) => response.json())
@@ -367,7 +533,11 @@ export default {
     },
     toggleAlternatives() {
       this.showAlternatives = !this.showAlternatives;
+      localStorage.setItem(STORAGE_KEY, this.showAlternatives)
     },
+    methodToRunOnSelect(payload) {
+            this.object = payload;
+          }
   },
 };
 </script>
