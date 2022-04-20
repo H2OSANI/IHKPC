@@ -47,10 +47,11 @@ h2{
 
 .search-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     padding: 2rem;
     background-color: #faf6f6;
+
 }
 .price {
     padding: 0;
@@ -63,8 +64,8 @@ h2{
     border: 1px solid currentColor;
     border-radius: 2px;
     min-width: 25rem;
-    margin-left: 25rem;
-    margin-right: 25rem;
+    /* margin-left: 25rem;
+    margin-right: 25rem; */
 }
 
 .product-container {
@@ -77,6 +78,8 @@ h2{
     border-left: none;
     border-right: none;
     box-shadow: 2px 2px 6px 4px rgba(0, 0, 0, 0.753);
+    flex: 100%;
+    
 }
 
 .product-information {
@@ -85,15 +88,26 @@ h2{
     background-color: #FFFF;
 
 }
-
+.product-information-list {
+    list-style-type: none;
+}
+.product-information-list li{
+    padding: 10px;
+}
+.product-information-list li:not(:first-of-type){
+    border-top: 1px solid rgba(128, 128, 128, 0.548);
+}
 .product-rating {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    width: 20rem;
-    max-width: 25rem;
+    width: 25rem;
+    max-width: 30rem;
     background-color: #FFFF;
 
+}
+.product-rating tbody {
+    margin-top: 50%;
 }
 
 td {
@@ -106,6 +120,7 @@ td {
     width: 350px;
     height: 350px;
     min-width: 15rem;
+    align-self: center;
 }
 
 img {

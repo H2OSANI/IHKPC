@@ -13,18 +13,22 @@
     <div class="price" v-if="showProduct">
       <h3>Preis: {{ price }} {{ countrySelected.Currency }}</h3>
     </div>
-    <form class="search-bar">
-      <input
-        type="text"
-        name="ProductNumber"
-        id="ProductNumber"
-        placeholder="Suche nach Artikelnummer..."
-        ref="productNumberInput"
-      />
-      <button @click.prevent="getInput()" class="searchButton"></button>
-    </form>
+      <div class="search-bar-wrapper">
+        <form class="search-bar">
+          <input
+            type="text"
+            name="ProductNumber"
+            id="ProductNumber"
+            placeholder="Suche nach Artikelnummer..."
+            ref="productNumberInput"
+          />
+          <button @click.prevent="getInput()" class="searchButton"></button>
+        </form>
+      </div>
+      <div class="display-articlenumber" v-if="ArticleNumber != 0">
+        <h3>Art.Nummer: {{ArticleNumber}}</h3>
+      </div>
   </div>
-
   <div class="product-container" v-if="showProduct">
     <div class="product-image">
       <img v-bind:src="image" alt="Produktfoto" />
@@ -32,9 +36,8 @@
     <div class="product-information">
       <h3>Produktinformationen:</h3>
       <br />
-      <ul>
-        <li>{{ description }}</li>
-        <li v-for="feature in features" :key="feature.name">
+      <ul class="product-information-list">
+        <li v-for="feature in features" :key="feature.name" >
           {{ feature.name }} : {{ feature.featureValues[0].value }}
         </li>
       </ul>
@@ -354,6 +357,7 @@ export default {
           Teilsortiment: "",
         },
       ],
+      ArticleNumber: 0,
       showProduct: false,
       product: undefined,
       image: "",
@@ -421,11 +425,11 @@ export default {
         .catch((error) => console.log("error", error));
       console.log(data);
       const productMaster = data.records[0].MasterID;
-      const articleNumber = data.records[0].ArticleNumber;
+      this.ArticleNumber = data.records[0].ArticleNumber;
       console.log(productMaster);
-      console.log(articleNumber);
+      console.log(this.ArticleNumber);
       const productDetails = await fetch(
-        `http://mybackend.com:8080/shop/api/shops/www.kaiserkraft.${this.countrySelected.Code}/product/${productMaster}/?articleNumber=${articleNumber}?lang=de`,
+        `http://mybackend.com:8080/shop/api/shops/www.kaiserkraft.${this.countrySelected.Code}/product/${productMaster}/?articleNumber=${this.ArticleNumber}?lang=de`,
         requestOptions
       )
         .then((response) => response.json())
@@ -445,7 +449,7 @@ export default {
         this.showProduct = true;
         this.showAlternatives = false;
       }
-      const result = this.data.Sheet1.find((item) => item.ID === articleNumber);
+      const result = this.data.Sheet1.find((item) => item.ID === this.ArticleNumber);
       console.log(result);
 
       this.ratings.Quality = result.Quality;
@@ -481,7 +485,6 @@ export default {
       for (let i = 0; i < this.matrix.length; i++) {
         if (!this.matrix[i]) {
           promiseList.push(Promise.resolve({brandedProductName: "Keine Treffer", galleryList:[{url: null}], price: {net: 0}}));
-          //this.alternatives.push();
         } else {
           promiseList.push(
           fetch(
@@ -492,8 +495,6 @@ export default {
             .catch((error) => {
               console.log("error", error);
             }));
-          //alternativeResult.articleNumber = this.matrix[i].ID;
-          // this.alternatives.push(alternativeResult);
         }
       }
       await Promise.all(promiseList);
